@@ -1,5 +1,6 @@
 import 'package:bloc_example/cubit/counter_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -12,44 +13,49 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   // declaring an instance of the cubit
-  final counter = CounterCubit();
+  final counterCubit = CounterCubit();
 
   @override
   Widget build(BuildContext context) {
-    final counterCubit = counter.state;
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$counterCubit',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: Row(
-        children: [
-          FloatingActionButton(
-            onPressed: () => {counter.increment(), setState(() {})},
-            tooltip: 'Increment',
-            child: const Icon(Icons.add),
+    //final counter = counter.state;
+    return BlocBuilder <CounterCubit, int>(
+      bloc: counterCubit,
+      builder: (context, counter) {
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+            title: Text(widget.title),
           ),
-          FloatingActionButton(
-            onPressed: () => {counter.decrement(), setState(() {})},
-            tooltip: 'Decrement',
-            child: const Icon(Icons.minimize),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Text(
+                  'You have pushed the button this many times:',
+                ),
+                Text(
+                  '$counter',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+              ],
+            ),
           ),
-        ],
-      ),
+          floatingActionButton: Row(
+            children: [
+              FloatingActionButton(
+                onPressed: () => {counterCubit.increment()},
+                tooltip: 'Increment',
+                child: const Icon(Icons.add),
+              ),
+              FloatingActionButton(
+                onPressed: () => {counterCubit.decrement()},
+                tooltip: 'Decrement',
+                child: const Icon(Icons.minimize),
+              ),
+            ],
+          ),
+        );
+      }
     );
   }
 }
